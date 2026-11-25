@@ -1,11 +1,49 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    Teste
-</body>
+  </head>
+  <body>
+    Digite o nome do cavalo: <input type="text" id="ipt_cavalo" />
+    <button onclick="Cadastrar()">Cadastrar cavalo</button>
+    <br />
+    Digite a quantidade de voltas da corrida:
+    <input type="number" id="ipt_voltas" />
+    <button onclick="Corrida()">Dar largada</button>
+  </body>
+  <script>
+    listaCavalos = [];
+
+    function Cadastrar() {
+      let nome = ipt_cavalo.value;
+      listaCavalos.push({
+        Nome: nome,
+        tempoTotal: 0,
+        voltas: [],
+      });
+    }
+    function Corrida() {
+      let qtdVoltas = ipt_voltas.value;
+      for (let i = 0; i < qtdVoltas; i++) {
+        for (let j = 0; j < listaCavalos.length - 1; j++) {
+          let tempo = (Math.random() * 2 + 7).toFixed(1);
+
+          listaCavalos[j].voltas.push(tempo)
+          listaCavalos[j].tempoTotal += tempo
+        }
+      }
+
+      let idxPodio = [0, 1, 2]
+      for (let i = 0; i < listaCavalos.length; i++) {
+        let cavaloAtual = listaCavalos[i]
+        let primeiroLugar = listaCavalos[idxPodio[0]]
+
+        if (cavaloAtual.tempoTotal < primeiroLugar.tempoTotal) {
+            idxPodio[0] = i
+        }
+      }
+    }
+  </script>
 </html>

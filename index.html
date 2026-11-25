@@ -12,36 +12,77 @@
     Digite a quantidade de voltas da corrida:
     <input type="number" id="ipt_voltas" />
     <button onclick="Corrida()">Dar largada</button>
+    <div id="div_exibir"></div>
   </body>
   <script>
     listaCavalos = [];
 
     function Cadastrar() {
+      if (listaCavalos.length == 6) {
+        alert("Você já registrou a quantidade máxima de cavalos!");
+        return false;
+      }
+
       let nome = ipt_cavalo.value;
       listaCavalos.push({
-        Nome: nome,
+        nome: nome,
         tempoTotal: 0,
         voltas: [],
       });
+      alert("Cadastro realizado com sucesso!");
+      console.log(listaCavalos);
     }
-    function Corrida() {
-      let qtdVoltas = ipt_voltas.value;
-      for (let i = 0; i < qtdVoltas; i++) {
-        for (let j = 0; j < listaCavalos.length - 1; j++) {
-          let tempo = (Math.random() * 2 + 7).toFixed(1);
 
-          listaCavalos[j].voltas.push(tempo)
-          listaCavalos[j].tempoTotal += tempo
-        }
+    function Corrida() {
+      let msgFinal = ``;
+
+      if (listaCavalos.length < 2) {
+        alert("Você precisa registrar pelo menos dois cavalos!");
+        return false;
       }
 
-      let idxPodio = [0, 1, 2]
+      let qtdVoltas = ipt_voltas.value;
+      if (qtdVoltas < 2 || qtdVoltas > 6) {
+        alert("Insira de 2 a 6 voltas");
+        return false;
+      }
+
+      // Somando tempo total de cada cavalo
+      for (let i = 0; i < qtdVoltas; i++) {
+        div_exibir.innerHTML += ` Volta ${i + 1} <br>`;
+        for (let j = 0; j < listaCavalos.length; j++) {
+          let tempo = (Math.random() * 2 + 7);
+
+          listaCavalos[j].voltas.push(tempo);
+          listaCavalos[j].tempoTotal += tempo;
+
+          div_exibir.innerHTML += `
+            Cavalo 
+            ${listaCavalos[j].nome} – 
+            ${tempo} – 
+            ${listaCavalos[j].tempoTotal} -
+          `;
+        }
+        div_exibir.innerHTML += `<br><br>`;
+      }
+
+      // Comparando cavalos e inserindo seus índices no pódio
+      let idxPodio = [0, 1, 2];
       for (let i = 0; i < listaCavalos.length; i++) {
-        let cavaloAtual = listaCavalos[i]
-        let primeiroLugar = listaCavalos[idxPodio[0]]
+        let cavaloAtual = listaCavalos[i];
+        let primeiroLugar = listaCavalos[idxPodio[0]];
+        let segundoLugar = listaCavalos[idxPodio[1]];
+        let terceiroLugar = listaCavalos[idxPodio[2]];
 
         if (cavaloAtual.tempoTotal < primeiroLugar.tempoTotal) {
-            idxPodio[0] = i
+          idxPodio[2] = idxPodio[1];
+          idxPodio[1] = idxPodio[2];
+          idxPodio[0] = i;
+        } else if (cavaloAtual.tempoTotal < segundoLugar.tempoTotal) {
+          idxPodio[2] = idxPodio[1];
+          idxPodio[1] = i;
+        } else if (cavaloAtual.tempoTotal < terceiroLugar.tempoTotal) {
+          idxPodio[2] = i;
         }
       }
     }
